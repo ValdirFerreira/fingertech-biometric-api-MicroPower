@@ -1,0 +1,83 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <ApplicationIcon>icone-finger.ico</ApplicationIcon>
+    <AssemblyVersion>2.4.5.0</AssemblyVersion>
+    <FileVersion>2.4.5.0</FileVersion>
+    <PlatformTarget>x64</PlatformTarget>
+    <StartupObject>BiometricService.UI.App</StartupObject>
+    <UserSecretsId>dotnet-BiometricService-c7d8d14c-120e-4583-b733-7856abd5d006</UserSecretsId>
+    <PublishDir>$(MSBuildProjectDirectory)\..\publish\</PublishDir>
+    <InstallerOutputDir>$(MSBuildProjectDirectory)\..\installer-output\</InstallerOutputDir>
+    <IsccPath Condition="Exists('$(ProgramFiles(x86))\Inno Setup 6\ISCC.exe')">$(ProgramFiles(x86))\Inno Setup 6\ISCC.exe</IsccPath>
+    <IsccPath Condition="Exists('$(ProgramFiles)\Inno Setup 6\ISCC.exe')">$(ProgramFiles)\Inno Setup 6\ISCC.exe</IsccPath>
+    <IsccPath Condition="Exists('C:\Program Files (x86)\Inno Setup 6\ISCC.exe')">C:\Program Files (x86)\Inno Setup 6\ISCC.exe</IsccPath>
+  </PropertyGroup>
+
+  <!-- Arquivos de conteudo -->
+  <ItemGroup>
+    <Content Include="icone-finger.ico" />
+    <Content Include="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="webapp\**\*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="wwwroot\**\*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <!-- Exclui pastas Java que foram incluidas acidentalmente -->
+  <ItemGroup>
+    <Compile  Remove="antlr\**;br\**;com\**;google\**;images\**;io\**;javassist\**;javax\**;jersey\**;META-INF\**;morpho\**;net\**;okio\**;org\**;software\**" />
+    <Content  Remove="antlr\**;br\**;com\**;google\**;images\**;io\**;javassist\**;javax\**;jersey\**;META-INF\**;morpho\**;net\**;okio\**;org\**;software\**" />
+    <EmbeddedResource Remove="antlr\**;br\**;com\**;google\**;images\**;io\**;javassist\**;javax\**;jersey\**;META-INF\**;morpho\**;net\**;okio\**;org\**;software\**" />
+    <None     Remove="antlr\**;br\**;com\**;google\**;images\**;io\**;javassist\**;javax\**;jersey\**;META-INF\**;morpho\**;net\**;okio\**;org\**;software\**" />
+    <Page     Remove="antlr\**;br\**;com\**;google\**;images\**;io\**;javassist\**;javax\**;jersey\**;META-INF\**;morpho\**;net\**;okio\**;org\**;software\**" />
+  </ItemGroup>
+
+  <!-- ASP.NET Core embutido (sem Sdk.Web) -->
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <!-- Pacotes NuGet -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Hosting"                 Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="8.0.0" />
+    <PackageReference Include="Oracle.ManagedDataAccess.Core"                Version="23.7.0" />
+  </ItemGroup>
+
+  <!-- SDK NITGEN local -->
+  <ItemGroup>
+    <Reference Include="NITGEN.SDK.NBioBSP">
+      <HintPath>C:\Program Files (x86)\NITGEN\eNBSP SDK Professional\SDK\dotNET\NITGEN.SDK.NBioBSP.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <!-- Gera o instalador automaticamente apos Publish em Release -->
+  <Target Name="GenerateInstaller" AfterTargets="Publish"
+          Condition="'$(Configuration)' == 'Release' AND '$(IsccPath)' != ''">
+    <Message Text="========================================" Importance="high" />
+    <Message Text="  Gerando instalador com Inno Setup..." Importance="high" />
+    <Message Text="========================================" Importance="high" />
+    <MakeDir Directories="$(InstallerOutputDir)" />
+    <Exec Command="&quot;$(IsccPath)&quot; &quot;$(MSBuildProjectDirectory)\..\installer.iss&quot;"
+          WorkingDirectory="$(MSBuildProjectDirectory)\.."
+          ConsoleToMSBuild="true" />
+    <Message Text="  Instalador gerado em: $(InstallerOutputDir)" Importance="high" />
+  </Target>
+
+  <Target Name="WarnNoInnoSetup" AfterTargets="Publish"
+          Condition="'$(Configuration)' == 'Release' AND '$(IsccPath)' == ''">
+    <Warning Text="Inno Setup 6 nao encontrado. Instale em https://jrsoftware.org/isdl.php e publique novamente." />
+  </Target>
+
+</Project>

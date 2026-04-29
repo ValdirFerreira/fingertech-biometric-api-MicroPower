@@ -1,0 +1,436 @@
+<Window x:Class="BiometricService.UI.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Fingertech Biometric API"
+        Width="840" Height="640"
+        MinWidth="700" MinHeight="500"
+        WindowStartupLocation="CenterScreen"
+        Background="{StaticResource PrimaryBrush}"
+        Closing="Window_Closing">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="54"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="30"/>
+        </Grid.RowDefinitions>
+
+        <!-- HEADER -->
+        <Border Grid.Row="0"
+                Background="{StaticResource SurfaceBrush}"
+                BorderBrush="{StaticResource BorderBrush}"
+                BorderThickness="0,0,0,1">
+            <Grid Margin="20,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <Ellipse x:Name="StatusDot" Width="10" Height="10"
+                             Fill="{StaticResource WarningBrush}" Margin="0,0,10,0"/>
+                    <TextBlock Text="Fingertech Biometric API"
+                               Foreground="{StaticResource TextPrimaryBrush}"
+                               FontSize="15" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                    <TextBlock Text=" v2.4.5"
+                               Foreground="{StaticResource TextSecondaryBrush}"
+                               FontSize="13" VerticalAlignment="Center"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="1" Orientation="Horizontal"
+                            VerticalAlignment="Center">
+                    <Button Content="Abrir no navegador" Margin="0,0,8,0"
+                            Style="{StaticResource GhostButton}"
+                            Click="BtnBrowser_Click"/>
+                    <Button Content="Minimizar para bandeja"
+                            Style="{StaticResource GhostButton}"
+                            Click="BtnMinimize_Click"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- CONTEUDO: ABAS -->
+        <TabControl Grid.Row="1" Background="Transparent" BorderThickness="0" Margin="16,8,16,0">
+            <TabControl.Resources>
+                <Style TargetType="TabItem">
+                    <Setter Property="Background"      Value="Transparent"/>
+                    <Setter Property="Foreground"      Value="{StaticResource TextSecondaryBrush}"/>
+                    <Setter Property="FontSize"        Value="13"/>
+                    <Setter Property="Padding"         Value="14,8"/>
+                    <Setter Property="BorderThickness" Value="0"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="TabItem">
+                                <Border x:Name="Bd" Background="Transparent"
+                                        BorderBrush="Transparent"
+                                        BorderThickness="0,0,0,2"
+                                        Padding="{TemplateBinding Padding}">
+                                    <ContentPresenter ContentSource="Header"
+                                                      HorizontalAlignment="Center"
+                                                      VerticalAlignment="Center"/>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsSelected" Value="True">
+                                        <Setter TargetName="Bd" Property="BorderBrush"
+                                                Value="{StaticResource AccentBrush}"/>
+                                        <Setter Property="Foreground"
+                                                Value="{StaticResource TextPrimaryBrush}"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </TabControl.Resources>
+
+            <!-- ABA PAINEL -->
+            <TabItem Header="Painel">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="0,10,0,0">
+                    <StackPanel>
+
+                        <!-- Cards de métricas -->
+                        <Grid Margin="0,0,0,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="8"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="8"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="8"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Border Grid.Column="0" Style="{StaticResource Card}">
+                                <StackPanel>
+                                    <TextBlock Text="STATUS" Style="{StaticResource FieldLabel}"/>
+                                    <TextBlock x:Name="MetricStatus" Text="Iniciando..."
+                                               Foreground="{StaticResource WarningBrush}"
+                                               FontSize="15" FontWeight="SemiBold"/>
+                                </StackPanel>
+                            </Border>
+                            <Border Grid.Column="2" Style="{StaticResource Card}">
+                                <StackPanel>
+                                    <TextBlock Text="PORTA" Style="{StaticResource FieldLabel}"/>
+                                    <TextBlock x:Name="MetricPort" Text="—"
+                                               Foreground="{StaticResource TextPrimaryBrush}"
+                                               FontSize="15" FontWeight="SemiBold"/>
+                                </StackPanel>
+                            </Border>
+                            <Border Grid.Column="4" Style="{StaticResource Card}">
+                                <StackPanel>
+                                    <TextBlock Text="TEMPLATES NA MEMÓRIA" Style="{StaticResource FieldLabel}"/>
+                                    <TextBlock x:Name="MetricTemplates" Text="0"
+                                               Foreground="{StaticResource AccentBrush}"
+                                               FontSize="15" FontWeight="SemiBold"/>
+                                </StackPanel>
+                            </Border>
+                            <Border Grid.Column="6" Style="{StaticResource Card}">
+                                <StackPanel>
+                                    <TextBlock Text="MODO CONTÍNUO" Style="{StaticResource FieldLabel}"/>
+                                    <TextBlock x:Name="MetricContinuous" Text="Parado"
+                                               Foreground="{StaticResource TextSecondaryBrush}"
+                                               FontSize="15" FontWeight="SemiBold"/>
+                                </StackPanel>
+                            </Border>
+                        </Grid>
+
+                        <!-- Controle de identificação contínua -->
+                        <Border Style="{StaticResource Card}" Margin="0,0,0,10">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="10"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <TextBlock Grid.Row="0" Text="Identificação Contínua"
+                                           Foreground="{StaticResource TextPrimaryBrush}"
+                                           FontSize="13" FontWeight="SemiBold"/>
+                                <StackPanel Grid.Row="2" Orientation="Horizontal">
+                                    <Button x:Name="BtnStartContinuous" Content="▶  Iniciar"
+                                            Style="{StaticResource PrimaryButton}"
+                                            Margin="0,0,8,0"
+                                            Click="BtnStartContinuous_Click"/>
+                                    <Button x:Name="BtnStopContinuous" Content="■  Parar"
+                                            Style="{StaticResource DangerButton}"
+                                            IsEnabled="False"
+                                            Margin="0,0,16,0"
+                                            Click="BtnStopContinuous_Click"/>
+                                    <TextBlock Text="Nível de segurança:"
+                                               Foreground="{StaticResource TextSecondaryBrush}"
+                                               VerticalAlignment="Center" FontSize="12"
+                                               Margin="0,0,8,0"/>
+                                    <ComboBox x:Name="CmbSecuLevel" SelectedIndex="4" Width="130"
+                                              VerticalAlignment="Center">
+                                        <ComboBoxItem Content="1 — Muito baixo"/>
+                                        <ComboBoxItem Content="2 — Baixo"/>
+                                        <ComboBoxItem Content="3 — Médio"/>
+                                        <ComboBoxItem Content="4 — Alto"/>
+                                        <ComboBoxItem Content="5 — Muito alto"/>
+                                    </ComboBox>
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+
+                        <!-- Log de identificações -->
+                        <Border Style="{StaticResource Card}" Margin="0,0,0,10">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="10"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <Grid Grid.Row="0">
+                                    <TextBlock Text="Últimas Identificações"
+                                               Foreground="{StaticResource TextPrimaryBrush}"
+                                               FontSize="13" FontWeight="SemiBold"/>
+                                    <Button Content="Limpar" HorizontalAlignment="Right"
+                                            Style="{StaticResource GhostButton}" Padding="10,4"
+                                            Click="BtnClearIdLog_Click"/>
+                                </Grid>
+                                <DataGrid Grid.Row="2" x:Name="GridIdLog"
+                                          AutoGenerateColumns="False"
+                                          Background="{StaticResource InputBrush}"
+                                          RowBackground="Transparent"
+                                          AlternatingRowBackground="#0A1530"
+                                          Foreground="{StaticResource TextPrimaryBrush}"
+                                          BorderThickness="0"
+                                          GridLinesVisibility="Horizontal"
+                                          HorizontalGridLinesBrush="{StaticResource BorderBrush}"
+                                          HeadersVisibility="Column"
+                                          CanUserAddRows="False"
+                                          IsReadOnly="True"
+                                          Height="130">
+                                    <DataGrid.ColumnHeaderStyle>
+                                        <Style TargetType="DataGridColumnHeader">
+                                            <Setter Property="Background"      Value="{StaticResource InputBrush}"/>
+                                            <Setter Property="Foreground"      Value="{StaticResource TextSecondaryBrush}"/>
+                                            <Setter Property="FontSize"        Value="11"/>
+                                            <Setter Property="Padding"         Value="10,6"/>
+                                            <Setter Property="BorderThickness" Value="0"/>
+                                        </Style>
+                                    </DataGrid.ColumnHeaderStyle>
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="Horário"   Binding="{Binding Timestamp, StringFormat=HH:mm:ss}" Width="90"/>
+                                        <DataGridTextColumn Header="ID"        Binding="{Binding Id}"         Width="80"/>
+                                        <DataGridTextColumn Header="Resultado" Binding="{Binding StatusText}" Width="*"/>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </Grid>
+                        </Border>
+
+                        <!-- Log do sistema -->
+                        <Border Style="{StaticResource Card}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="8"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <Grid Grid.Row="0">
+                                    <TextBlock Text="Log do Sistema"
+                                               Foreground="{StaticResource TextPrimaryBrush}"
+                                               FontSize="13" FontWeight="SemiBold"/>
+                                    <Button Content="Limpar" HorizontalAlignment="Right"
+                                            Style="{StaticResource GhostButton}" Padding="10,4"
+                                            Click="BtnClearSysLog_Click"/>
+                                </Grid>
+                                <Border Grid.Row="2" Background="{StaticResource InputBrush}"
+                                        CornerRadius="6">
+                                    <ScrollViewer x:Name="LogScroller" Height="140"
+                                                  VerticalScrollBarVisibility="Auto">
+                                        <TextBlock x:Name="TxtLog"
+                                                   Foreground="#7DD3A8"
+                                                   FontFamily="Consolas"
+                                                   FontSize="11"
+                                                   Padding="10"
+                                                   TextWrapping="Wrap"/>
+                                    </ScrollViewer>
+                                </Border>
+                            </Grid>
+                        </Border>
+
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+
+            <!-- ABA CONFIGURAÇÕES -->
+            <TabItem Header="Configurações">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="0,10,0,0">
+                    <StackPanel MaxWidth="580" HorizontalAlignment="Left">
+
+                        <!-- Porta -->
+                        <Border Style="{StaticResource Card}" Margin="0,0,0,10">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="10"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="4"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <TextBlock Grid.Row="0" Text="API"
+                                           Foreground="{StaticResource TextPrimaryBrush}"
+                                           FontSize="13" FontWeight="SemiBold"/>
+                                <TextBlock Grid.Row="2" Text="Porta HTTP"
+                                           Style="{StaticResource FieldLabel}"/>
+                                <TextBox Grid.Row="4" x:Name="CfgPort"
+                                         Style="{StaticResource DarkTextBox}"
+                                         Width="120" HorizontalAlignment="Left"/>
+                            </Grid>
+                        </Border>
+
+                        <!-- Oracle -->
+                        <Border Style="{StaticResource Card}" Margin="0,0,0,10">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="10"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="4"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="4"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <TextBlock Grid.Row="0" Text="Integração Oracle"
+                                           Foreground="{StaticResource TextPrimaryBrush}"
+                                           FontSize="13" FontWeight="SemiBold"/>
+                                <TextBlock Grid.Row="2" Text="String de conexão"
+                                           Style="{StaticResource FieldLabel}"/>
+                                <TextBox Grid.Row="4" x:Name="CfgOracle"
+                                         Style="{StaticResource DarkTextBox}"/>
+                                <TextBlock Grid.Row="6"
+                                           Text="Ex: User Id=usuario;Password=senha;Data Source=host:1521/SID"
+                                           Style="{StaticResource FieldLabel}" FontSize="10"/>
+                            </Grid>
+                        </Border>
+
+                        <!-- Senior RH -->
+                        <Border Style="{StaticResource Card}" Margin="0,0,0,10">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="10"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="4"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="10"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="4"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="10"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="4"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="12"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Grid.Row="0" Grid.ColumnSpan="3"
+                                           Text="Integração Senior RH"
+                                           Foreground="{StaticResource TextPrimaryBrush}"
+                                           FontSize="13" FontWeight="SemiBold"/>
+
+                                <!-- URL + Tenant -->
+                                <TextBlock Grid.Row="2" Grid.Column="0" Text="URL da API"
+                                           Style="{StaticResource FieldLabel}"/>
+                                <TextBox   Grid.Row="4" Grid.Column="0" x:Name="CfgSeniorUrl"
+                                           Style="{StaticResource DarkTextBox}"/>
+
+                                <TextBlock Grid.Row="2" Grid.Column="2" Text="Tenant Name"
+                                           Style="{StaticResource FieldLabel}"/>
+                                <TextBox   Grid.Row="4" Grid.Column="2" x:Name="CfgSeniorTenant"
+                                           Style="{StaticResource DarkTextBox}"/>
+
+                                <!-- Client ID + Access Key -->
+                                <TextBlock Grid.Row="6" Grid.Column="0" Text="Client ID"
+                                           Style="{StaticResource FieldLabel}"/>
+                                <TextBox   Grid.Row="8" Grid.Column="0" x:Name="CfgSeniorClientId"
+                                           Style="{StaticResource DarkTextBox}"/>
+
+                                <TextBlock Grid.Row="6" Grid.Column="2" Text="Access Key"
+                                           Style="{StaticResource FieldLabel}"/>
+                                <TextBox   Grid.Row="8" Grid.Column="2" x:Name="CfgSeniorAccessKey"
+                                           Style="{StaticResource DarkTextBox}"/>
+
+                                <!-- Secret -->
+                                <TextBlock Grid.Row="10" Grid.Column="0" Text="Secret"
+                                           Style="{StaticResource FieldLabel}"/>
+                                <PasswordBox Grid.Row="12" Grid.Column="0" x:Name="CfgSeniorSecret"
+                                             Background="{StaticResource InputBrush}"
+                                             Foreground="{StaticResource TextPrimaryBrush}"
+                                             BorderBrush="{StaticResource BorderBrush}"
+                                             BorderThickness="1"
+                                             Padding="10,6"/>
+                            </Grid>
+                        </Border>
+
+                        <!-- Salvar -->
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                            <Button Content="Salvar configurações"
+                                    Style="{StaticResource PrimaryButton}"
+                                    Margin="0,0,12,0"
+                                    Click="BtnSaveConfig_Click"/>
+                            <TextBlock x:Name="TxtSaveStatus" Text="✓ Salvo com sucesso"
+                                       Foreground="{StaticResource SuccessBrush}"
+                                       VerticalAlignment="Center" FontSize="12"
+                                       Visibility="Collapsed"/>
+                        </StackPanel>
+
+                        <TextBlock Foreground="{StaticResource WarningBrush}" FontSize="11"
+                                   TextWrapping="Wrap">
+                            ⚠ Alterações na porta exigem reiniciar o aplicativo.
+                        </TextBlock>
+
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+
+            <!-- ABA SOBRE -->
+            <TabItem Header="Sobre">
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,40,0,0">
+                    <TextBlock Text="Fingertech Biometric API"
+                               Foreground="{StaticResource TextPrimaryBrush}"
+                               FontSize="22" FontWeight="SemiBold"
+                               HorizontalAlignment="Center"/>
+                    <TextBlock Text="v2.4.5"
+                               Foreground="{StaticResource TextSecondaryBrush}"
+                               FontSize="14" HorizontalAlignment="Center" Margin="0,4,0,16"/>
+                    <TextBlock Foreground="{StaticResource TextSecondaryBrush}" FontSize="12"
+                               TextWrapping="Wrap" MaxWidth="420" TextAlignment="Center"
+                               HorizontalAlignment="Center" Margin="0,0,0,20">
+                        API REST para captura e identificação biométrica com leitores NITGEN NBioBSP.
+                        Suporta identificação 1:1, 1:N, modo contínuo, Oracle e Senior RH.
+                    </TextBlock>
+                    <TextBlock Text="Endpoints disponíveis:"
+                               Foreground="{StaticResource TextSecondaryBrush}"
+                               FontSize="12" HorizontalAlignment="Center" Margin="0,0,0,8"/>
+                    <TextBlock x:Name="TxtEndpoints"
+                               Foreground="#7DD3A8"
+                               FontFamily="Consolas" FontSize="11"
+                               HorizontalAlignment="Center" TextAlignment="Center"/>
+                </StackPanel>
+            </TabItem>
+
+        </TabControl>
+
+        <!-- STATUS BAR -->
+        <Border Grid.Row="2"
+                Background="{StaticResource SurfaceBrush}"
+                BorderBrush="{StaticResource BorderBrush}"
+                BorderThickness="0,1,0,0">
+            <Grid Margin="16,0">
+                <TextBlock x:Name="StatusBarText"
+                           Text="Iniciando servidor..."
+                           Foreground="{StaticResource TextSecondaryBrush}"
+                           FontSize="11" VerticalAlignment="Center"/>
+                <TextBlock x:Name="StatusBarRight"
+                           HorizontalAlignment="Right"
+                           Foreground="{StaticResource TextSecondaryBrush}"
+                           FontSize="11" VerticalAlignment="Center"/>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>
