@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "FMiMhwZvC6A=",
+  "dgSpecHash": "iMNd58tmlCU=",
   "success": true,
-  "projectFilePath": "C:\\CeperaCustom_6_6_1_1\\BiometricServiceAPI_completo\\BiometricServiceAPI\\BiometricService.csproj",
+  "projectFilePath": "C:\\CeperaCustom_6_6_1_1\\BiometricServiceAPI_completo-version-git\\BiometricServiceAPI\\BiometricService.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\valdir.silva\\.nuget\\packages\\microsoft.extensions.configuration\\8.0.0\\microsoft.extensions.configuration.8.0.0.nupkg.sha512",
     "C:\\Users\\valdir.silva\\.nuget\\packages\\microsoft.extensions.configuration.abstractions\\8.0.0\\microsoft.extensions.configuration.abstractions.8.0.0.nupkg.sha512",

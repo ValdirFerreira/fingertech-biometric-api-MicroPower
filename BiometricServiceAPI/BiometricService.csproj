@@ -36,11 +36,11 @@
 
   <!-- Exclui pastas Java que foram incluidas acidentalmente -->
   <ItemGroup>
-    <Compile  Remove="antlr\**;br\**;com\**;google\**;images\**;io\**;javassist\**;javax\**;jersey\**;META-INF\**;morpho\**;net\**;okio\**;org\**;software\**" />
-    <Content  Remove="antlr\**;br\**;com\**;google\**;images\**;io\**;javassist\**;javax\**;jersey\**;META-INF\**;morpho\**;net\**;okio\**;org\**;software\**" />
+    <Compile Remove="antlr\**;br\**;com\**;google\**;images\**;io\**;javassist\**;javax\**;jersey\**;META-INF\**;morpho\**;net\**;okio\**;org\**;software\**" />
+    <Content Remove="antlr\**;br\**;com\**;google\**;images\**;io\**;javassist\**;javax\**;jersey\**;META-INF\**;morpho\**;net\**;okio\**;org\**;software\**" />
     <EmbeddedResource Remove="antlr\**;br\**;com\**;google\**;images\**;io\**;javassist\**;javax\**;jersey\**;META-INF\**;morpho\**;net\**;okio\**;org\**;software\**" />
-    <None     Remove="antlr\**;br\**;com\**;google\**;images\**;io\**;javassist\**;javax\**;jersey\**;META-INF\**;morpho\**;net\**;okio\**;org\**;software\**" />
-    <Page     Remove="antlr\**;br\**;com\**;google\**;images\**;io\**;javassist\**;javax\**;jersey\**;META-INF\**;morpho\**;net\**;okio\**;org\**;software\**" />
+    <None Remove="antlr\**;br\**;com\**;google\**;images\**;io\**;javassist\**;javax\**;jersey\**;META-INF\**;morpho\**;net\**;okio\**;org\**;software\**" />
+    <Page Remove="antlr\**;br\**;com\**;google\**;images\**;io\**;javassist\**;javax\**;jersey\**;META-INF\**;morpho\**;net\**;okio\**;org\**;software\**" />
   </ItemGroup>
 
   <!-- ASP.NET Core embutido (sem Sdk.Web) -->
@@ -50,9 +50,9 @@
 
   <!-- Pacotes NuGet -->
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Hosting"                 Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="8.0.0" />
-    <PackageReference Include="Oracle.ManagedDataAccess.Core"                Version="23.7.0" />
+    <PackageReference Include="Oracle.ManagedDataAccess.Core" Version="23.7.0" />
   </ItemGroup>
 
   <!-- SDK NITGEN local -->
@@ -63,20 +63,16 @@
   </ItemGroup>
 
   <!-- Gera o instalador automaticamente apos Publish em Release -->
-  <Target Name="GenerateInstaller" AfterTargets="Publish"
-          Condition="'$(Configuration)' == 'Release' AND '$(IsccPath)' != ''">
+  <Target Name="GenerateInstaller" AfterTargets="Publish" Condition="'$(Configuration)' == 'Release' AND '$(IsccPath)' != ''">
     <Message Text="========================================" Importance="high" />
     <Message Text="  Gerando instalador com Inno Setup..." Importance="high" />
     <Message Text="========================================" Importance="high" />
     <MakeDir Directories="$(InstallerOutputDir)" />
-    <Exec Command="&quot;$(IsccPath)&quot; &quot;$(MSBuildProjectDirectory)\..\installer.iss&quot;"
-          WorkingDirectory="$(MSBuildProjectDirectory)\.."
-          ConsoleToMSBuild="true" />
+    <Exec Command="&quot;$(IsccPath)&quot; &quot;$(MSBuildProjectDirectory)\..\installer.iss&quot;" WorkingDirectory="$(MSBuildProjectDirectory)\.." ConsoleToMSBuild="true" />
     <Message Text="  Instalador gerado em: $(InstallerOutputDir)" Importance="high" />
   </Target>
 
-  <Target Name="WarnNoInnoSetup" AfterTargets="Publish"
-          Condition="'$(Configuration)' == 'Release' AND '$(IsccPath)' == ''">
+  <Target Name="WarnNoInnoSetup" AfterTargets="Publish" Condition="'$(Configuration)' == 'Release' AND '$(IsccPath)' == ''">
     <Warning Text="Inno Setup 6 nao encontrado. Instale em https://jrsoftware.org/isdl.php e publique novamente." />
   </Target>
 
