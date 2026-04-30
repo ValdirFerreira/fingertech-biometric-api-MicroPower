@@ -115,3 +115,33 @@ build.bat                      # Script de build e geração do instalador
 ## Licença
 
 Proprietário — Fingertech © 2025
+
+## Como gerar o instalador .exe (NSIS)
+
+### Pré-requisitos
+1. Instale o **NSIS** (gratuito) → https://nsis.sourceforge.io/Download
+   - Baixe o `nsis-3.xx-setup.exe` e instale normalmente
+
+### Estrutura de pastas
+
+Crie uma pasta `C:\installer_build\` com essa estrutura:
+
+```
+C:\installer_build\
+├── installer.nsi          ← script NSIS (disponível no repositório)
+└── publish_files\         ← arquivos gerados pelo dotnet publish
+    ├── BiometricService.exe
+    ├── *.dll
+    ├── appsettings.json
+    ├── webapp\
+    └── wwwroot\
+```
+
+### Gerar o `.exe`
+
+1. Instale o NSIS → https://nsis.sourceforge.io/Download
+2. Monte a pasta conforme estrutura acima
+3. Clique com botão direito no `installer.nsi` → **"Compile NSIS Script"**
+4. O instalador `Fingertech-BiometricAPI-Setup-v2.4.5.exe` é gerado na mesma pasta
+
+> Toda vez que gerar um novo build do projeto, basta substituir os arquivos dentro de `publish_files\` e compilar o script novamente.
