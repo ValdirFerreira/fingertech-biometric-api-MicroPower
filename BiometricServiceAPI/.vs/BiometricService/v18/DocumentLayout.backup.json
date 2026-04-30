@@ -1,7 +1,28 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "C:\\CeperaCustom_6_6_1_1\\BiometricServiceAPI_completo-version-git\\BiometricServiceAPI\\",
-  "Documents": [],
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{843CEEA5-5F78-04A7-BA4D-CBFF8AC8111D}|BiometricService.csproj|c:\\ceperacustom_6_6_1_1\\biometricserviceapi_completo-version-git\\biometricserviceapi\\ui\\app.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{843CEEA5-5F78-04A7-BA4D-CBFF8AC8111D}|BiometricService.csproj|solutionrelative:ui\\app.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{843CEEA5-5F78-04A7-BA4D-CBFF8AC8111D}|BiometricService.csproj|c:\\ceperacustom_6_6_1_1\\biometricserviceapi_completo-version-git\\biometricserviceapi\\webapp\\app\\app.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{843CEEA5-5F78-04A7-BA4D-CBFF8AC8111D}|BiometricService.csproj|solutionrelative:webapp\\app\\app.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{843CEEA5-5F78-04A7-BA4D-CBFF8AC8111D}|BiometricService.csproj|c:\\ceperacustom_6_6_1_1\\biometricserviceapi_completo-version-git\\biometricserviceapi\\apiservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{843CEEA5-5F78-04A7-BA4D-CBFF8AC8111D}|BiometricService.csproj|solutionrelative:apiservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{843CEEA5-5F78-04A7-BA4D-CBFF8AC8111D}|BiometricService.csproj|c:\\ceperacustom_6_6_1_1\\biometricserviceapi_completo-version-git\\biometricserviceapi\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{843CEEA5-5F78-04A7-BA4D-CBFF8AC8111D}|BiometricService.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{843CEEA5-5F78-04A7-BA4D-CBFF8AC8111D}|BiometricService.csproj|c:\\ceperacustom_6_6_1_1\\biometricserviceapi_completo-version-git\\biometricserviceapi\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{843CEEA5-5F78-04A7-BA4D-CBFF8AC8111D}|BiometricService.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
@@ -9,7 +30,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": -1,
+          "SelectedChildIndex": 3,
           "Children": [
             {
               "$type": "Bookmark",
@@ -22,6 +43,71 @@
             {
               "$type": "Bookmark",
               "Name": "ST:130:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "App.xaml.cs",
+              "DocumentMoniker": "C:\\CeperaCustom_6_6_1_1\\BiometricServiceAPI_completo-version-git\\BiometricServiceAPI\\UI\\App.xaml.cs",
+              "RelativeDocumentMoniker": "UI\\App.xaml.cs",
+              "ToolTip": "C:\\CeperaCustom_6_6_1_1\\BiometricServiceAPI_completo-version-git\\BiometricServiceAPI\\UI\\App.xaml.cs",
+              "RelativeToolTip": "UI\\App.xaml.cs",
+              "ViewState": "AgIAANAAAAAAAAAAAAAqwN8AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-30T12:00:01.72Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "app.js",
+              "DocumentMoniker": "C:\\CeperaCustom_6_6_1_1\\BiometricServiceAPI_completo-version-git\\BiometricServiceAPI\\webapp\\app\\app.js",
+              "RelativeDocumentMoniker": "webapp\\app\\app.js",
+              "ToolTip": "C:\\CeperaCustom_6_6_1_1\\BiometricServiceAPI_completo-version-git\\BiometricServiceAPI\\webapp\\app\\app.js",
+              "RelativeToolTip": "webapp\\app\\app.js",
+              "ViewState": "AgIAABUAAAAAAAAAAAAqwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2026-04-30T11:59:50.712Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "APIService.cs",
+              "DocumentMoniker": "C:\\CeperaCustom_6_6_1_1\\BiometricServiceAPI_completo-version-git\\BiometricServiceAPI\\APIService.cs",
+              "RelativeDocumentMoniker": "APIService.cs",
+              "ToolTip": "C:\\CeperaCustom_6_6_1_1\\BiometricServiceAPI_completo-version-git\\BiometricServiceAPI\\APIService.cs",
+              "RelativeToolTip": "APIService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-30T11:59:12.789Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\CeperaCustom_6_6_1_1\\BiometricServiceAPI_completo-version-git\\BiometricServiceAPI\\appsettings.json",
+              "RelativeDocumentMoniker": "appsettings.json",
+              "ToolTip": "C:\\CeperaCustom_6_6_1_1\\BiometricServiceAPI_completo-version-git\\BiometricServiceAPI\\appsettings.json",
+              "RelativeToolTip": "appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-04-30T11:59:11.178Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\CeperaCustom_6_6_1_1\\BiometricServiceAPI_completo-version-git\\BiometricServiceAPI\\Program.cs",
+              "RelativeDocumentMoniker": "Program.cs",
+              "ToolTip": "C:\\CeperaCustom_6_6_1_1\\BiometricServiceAPI_completo-version-git\\BiometricServiceAPI\\Program.cs",
+              "RelativeToolTip": "Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-30T11:59:06.175Z",
+              "EditorCaption": ""
             }
           ]
         }

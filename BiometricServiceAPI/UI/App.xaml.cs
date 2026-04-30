@@ -1,19 +1,19 @@
 // Alias explícitos para evitar ambiguidade entre WPF e WinForms
-using WpfApp        = System.Windows.Application;
-using WpfWindow     = System.Windows.Window;
-using WpfMessageBox = System.Windows.MessageBox;
-using WpfStartup    = System.Windows.StartupEventArgs;
-
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging.Configuration;
 using Microsoft.Extensions.Logging.EventLog;
 using System.Windows;
+using WpfApp = System.Windows.Application;
+using WpfMessageBox = System.Windows.MessageBox;
+using WpfStartup = System.Windows.StartupEventArgs;
+using WpfWindow = System.Windows.Window;
 
 namespace BiometricService.UI
 {
     public partial class App : WpfApp
     {
         private WebApplication? _webApp;
-        private MainWindow?     _mainWindow;
+        private MainWindow? _mainWindow;
         private System.Windows.Forms.NotifyIcon? _trayIcon;
 
         public static App Instance => (App)Current;
@@ -22,9 +22,12 @@ namespace BiometricService.UI
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
+
             Task.Run(StartApiAsync);
+
             _mainWindow = new MainWindow();
             _mainWindow.Show();
+
             SetupTrayIcon();
         }
 
@@ -34,26 +37,23 @@ namespace BiometricService.UI
             {
                 var builder = WebApplication.CreateBuilder();
 
-                var urls = builder.Configuration["Urls"] ?? "https://0.0.0.0:53079";
-                var uri = new Uri(urls.Split(';')[0].Trim());
-                var port = uri.Port;
-                var isHttps = uri.Scheme == "https";
+                // ✅ Usa localhost + dev-cert confiável pelo Chrome (rodar "dotnet dev-certs https --trust" na máquina do usuário)
+                const int port = 53079;
+                var urls = $"https://localhost:{port}";
 
                 builder.WebHost.ConfigureKestrel(options =>
                 {
-                    options.ListenAnyIP(port, listenOptions =>
+                    options.ListenLocalhost(port, listenOptions =>
                     {
-                        if (isHttps)
-                            listenOptions.UseHttps(); // requer: dotnet dev-certs https --trust
+                        listenOptions.UseHttps(); // usa o dev-cert confiável instalado na máquina
                     });
                 });
-
-
 
                 builder.Logging.ClearProviders();
                 builder.Logging.AddProvider(new UiLoggerProvider());
 
                 builder.Services.AddWindowsService();
+
                 LoggerProviderOptions.RegisterProviderOptions<EventLogSettings,
                     EventLogLoggerProvider>(builder.Services);
 
@@ -63,15 +63,65 @@ namespace BiometricService.UI
                 builder.Services.AddHostedService(
                     sp => sp.GetRequiredService<APIService>());
                 builder.Services.AddControllers();
-                builder.Services.AddCors(o =>
-                    o.AddPolicy("AllowAll", p =>
-                        p.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
+
+                builder.Services.AddCors(options =>
+                {
+                    options.AddPolicy("AllowAll", policy =>
+                    {
+                        policy
+                            .SetIsOriginAllowed(origin =>
+                            {
+                                if (string.IsNullOrEmpty(origin)) return false;
+
+                                var uri = new Uri(origin);
+                                var host = uri.Host.ToLower();
+
+                                return
+                                    host == "localhost" ||
+                                    host == "127.0.0.1" ||
+                                    host == "cepera.staging02.micropower.com.br" ||
+                                    host.EndsWith(".micropower.com.br");
+                            })
+                            .AllowAnyMethod()
+                            .AllowAnyHeader()
+                            .AllowCredentials()
+                            .WithExposedHeaders("*");
+                    });
+                });
 
                 _webApp = builder.Build();
-                _webApp.UseRouting();
+
+                // ✅ 1. Private Network Access (deve ser o PRIMEIRO middleware)
+                // Necessário para o Chrome permitir que sites HTTPS acessem localhost
+                _webApp.Use(async (context, next) =>
+                {
+                    context.Response.Headers.Append("Access-Control-Allow-Private-Network", "true");
+
+                    if (context.Request.Method == "OPTIONS")
+                    {
+                        var origin = context.Request.Headers["Origin"].ToString();
+                        if (!string.IsNullOrEmpty(origin))
+                            context.Response.Headers.Append("Access-Control-Allow-Origin", origin);
+
+                        context.Response.Headers.Append("Access-Control-Allow-Methods", "*");
+                        context.Response.Headers.Append("Access-Control-Allow-Headers", "*");
+                        context.Response.Headers.Append("Access-Control-Allow-Credentials", "true");
+                        context.Response.StatusCode = 204;
+                        return;
+                    }
+
+                    await next();
+                });
+
+                // ✅ 2. CORS
                 _webApp.UseCors("AllowAll");
+
+                // ✅ 3. Routing e arquivos estáticos
+                _webApp.UseRouting();
                 _webApp.UseDefaultFiles();
                 _webApp.UseStaticFiles();
+
+                // ✅ 4. Controllers por último
                 _webApp.MapControllers();
 
                 _webApp.Lifetime.ApplicationStarted.Register(() =>
@@ -96,18 +146,19 @@ namespace BiometricService.UI
 
             _trayIcon = new System.Windows.Forms.NotifyIcon
             {
-                Icon    = System.IO.File.Exists(iconPath)
+                Icon = System.IO.File.Exists(iconPath)
                             ? new System.Drawing.Icon(iconPath)
                             : System.Drawing.SystemIcons.Application,
                 Visible = true,
-                Text    = "Fingertech Biometric API"
+                Text = "Fingertech Biometric API"
             };
 
             var menu = new System.Windows.Forms.ContextMenuStrip();
-            menu.Items.Add("Abrir painel",       null, (_, _) => ShowWindow());
+            menu.Items.Add("Abrir painel", null, (_, _) => ShowWindow());
             menu.Items.Add("Abrir no navegador", null, (_, _) => OpenBrowser());
             menu.Items.Add(new System.Windows.Forms.ToolStripSeparator());
-            menu.Items.Add("Sair",               null, (_, _) => ExitApp());
+            menu.Items.Add("Sair", null, (_, _) => ExitApp());
+
             _trayIcon.ContextMenuStrip = menu;
             _trayIcon.DoubleClick += (_, _) => ShowWindow();
         }
@@ -129,8 +180,12 @@ namespace BiometricService.UI
             {
                 var url = (_webApp?.Urls?.FirstOrDefault() ?? "http://localhost:5000")
                     .Replace("0.0.0.0", "localhost");
+
                 System.Diagnostics.Process.Start(
-                    new System.Diagnostics.ProcessStartInfo(url) { UseShellExecute = true });
+                    new System.Diagnostics.ProcessStartInfo(url)
+                    {
+                        UseShellExecute = true
+                    });
             }
             catch { }
         }
@@ -138,8 +193,15 @@ namespace BiometricService.UI
         internal void ExitApp()
         {
             _trayIcon?.Dispose();
-            try { _webApp?.StopAsync(TimeSpan.FromSeconds(3)).GetAwaiter().GetResult(); }
+
+            try
+            {
+                _webApp?.StopAsync(TimeSpan.FromSeconds(3))
+                       .GetAwaiter()
+                       .GetResult();
+            }
             catch { }
+
             Shutdown();
         }
 
