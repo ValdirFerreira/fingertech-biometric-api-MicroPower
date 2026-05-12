@@ -509,8 +509,8 @@ public class Biometric
         try
         {
                 var req = new HttpRequestMessage(HttpMethod.Get,
-                    $"{apiUrl}/sam/application/entities/biometry?filter=person.situation='ACTIVE'&biometricManufacturer=FINGERPRINT_NITGEN&size=1000");
-                req.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+                           $"{apiUrl}/sam/application/entities/biometry?filter=biometricManufacturer=FINGERPRINT_NITGEN&person.situation='ACTIVE'&size=1000");
+            req.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
                 req.Headers.Add("client_id", clientId);
                 var resp = await http.SendAsync(req);
                 resp.EnsureSuccessStatusCode();
